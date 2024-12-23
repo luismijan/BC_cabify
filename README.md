@@ -56,25 +56,26 @@ Also, at the initial information is possible to get the first hint to clean the 
 
 To archive the purpose business case in the minimum time possible as is asked, we start researching similar projects. This research is started using the main free use LLM (Gemini & Bing Copilot). The option chosen is the Gemini one which recommend using multiple to measure the distance between routes and use those distances to classify. The LLM model purpose is use the following distances:
 
->	Fréchet inception distance (FID): This metric is used to measure the difference between real & predicted distribution by compare the mean and covariance in distributions. This metric brings a good information for the proposed model but is only accurate for same shaped embeddings. A possible solution to calculate the FID is suppose that once the sorted route is over the car will keep always in the same place. This solution will solve the technical problem, but it could confuse the model in case when the movement is pretty sort. For this reason, other metrics are tried.
+>	**Fréchet inception distance (FID)**: This metric is used to measure the difference between real & predicted distribution by compare the mean and covariance in distributions. This metric brings a good information for the proposed model but is only accurate for same shaped embeddings. A possible solution to calculate the FID is suppose that once the sorted route is over the car will keep always in the same place. This solution will solve the technical problem, but it could confuse the model in case when the movement is pretty sort. For this reason, other metrics are tried.
 
->	Dynamic Time Warping (DTW): This technique is used to find an optimal alignment between two sequences. the quality of the route even if is not only measure for the time cost is one on the main KPIs used. For this reason, this technique is one of the best options for the present problem due to the time dependency suppose. 
+>	**Dynamic Time Warping (DTW)**: This technique is used to find an optimal alignment between two sequences. the quality of the route even if is not only measure for the time cost is one on the main KPIs used. For this reason, this technique is one of the best options for the present problem due to the time dependency suppose. 
 
--	Hausdorff Distance: This distance tries to measure the maximum distance between both embeddings in the metric space.
+>	**Hausdorff Distance**: This distance tries to measure the maximum distance between both embeddings in the metric space.
+
 Due to the problem presented by the FID appears the need of new metrics
 
 - Based on Google [1] recommendations is possible to use the following distnaces:
->	Euclidean distance: Measure the distance between ends of vectors.
+>	**Euclidean distance**: Measure the distance between ends of vectors.
 
->	Cosine distance:  Cosine of angle θ between vectors.
+>	**Cosine distance**:  Cosine of angle θ between vectors.
 
->	Scalar product: Cosine multiplied by lengths of both vectors.
+>	**Scalar product**: Cosine multiplied by lengths of both vectors.
 
 - Based on Geek4Geeks [2] recommendations is possible to use the following distances:
  
->	Longest Common Subsequence (LCS): As its name suggests, the LSC return the length of the longest common subsequence in two strings. This metric is used for strings but is possible to apply in the present business case because it brings information about if the route diverges from the estimate one every time or have part of the path in common.
+>	**Longest Common Subsequence (LCS)**: As its name suggests, the LSC return the length of the longest common subsequence in two strings. This metric is used for strings but is possible to apply in the present business case because it brings information about if the route diverges from the estimate one every time or have part of the path in common.
 
->	Levenshtein distance: represent the minimum number of operations that could be performed to turn a vector v1 into a different vector v2.
+>	**Levenshtein distance**: represent the minimum number of operations that could be performed to turn a vector v1 into a different vector v2.
 
 Taken multiple options finally only 4 are chosen to build models with them (DTW, LCS, Levenshtein & Hausdorff distance).
 Once the features for the model are built and is possible to look for the best model & research its hyperparameters.

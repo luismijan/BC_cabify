@@ -67,7 +67,10 @@ In the first research is possible to see that, indeed, the model is good enough 
  ![image](https://github.com/user-attachments/assets/fa19e959-4fe6-4e89-87d2-23db2747407c)
 Figure 1
 
-Google [1]: https://developers.google.com/machine-learning/clustering/dnn-clustering/supervised-similarity?hl=es-419
-Geek4Geeks [2]: https://www.geeksforgeeks.org/
-Optuna [3]: https://github.com/optuna/optuna 
-Streamlit [4]: https://docs.streamlit.io/ 
+>Google [1]: https://developers.google.com/machine-learning/clustering/dnn-clustering/supervised-similarity?hl=es-419
+
+> Geek4Geeks [2]: https://www.geeksforgeeks.org/
+
+> Optuna [3]: https://github.com/optuna/optuna 
+
+> Streamlit [4]: https://docs.streamlit.io/ 

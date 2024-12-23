@@ -1,4 +1,5 @@
-**PART 1: Model Prototyping**
+# PART 1: Experiment Design
+
 The social logging is a powerful tool to ease the installation process whether you are a new user or registered user who has reinstalled the app.  
 To test the asset of this tool is possible to use multiple methodologies. This study will be focused on those based on machine learning and data solutions.  
 By the data solutions hand the best one could be a classic A|B test,  even if is possible to build another solution based on reinforce learning for example. In the A|B test, the control group are those who use the traditional logging and treatment group will be the social loggings users. 
@@ -39,7 +40,8 @@ Once all the data is available is mandatory to consider the time evolution. For 
 So is important to analyse the time that users’ need to complete the journey successfully. For example, the first day a 75% of the users complete the journey, the 25% rest of the journey are lost in this part of the funnel. Then the analysis will be repeated in the following 5, 7, etc days until have a enough consistent analysis to know the evolution of the users portfolio.
 Finally, a simple statistic test like a t-stundent test will confirm or not the statistically differences between groups paying attention to the time and the absolute metrics.
 
-**PART 2: Model Prototyping**
+# PART 2: Model Prototyping
+
 The first step to start a model is always to analyse and clean the dataset. At the beginning the lack of journeys comparing to those which are noted in the enounced of the problem. No matter the way the json file is read (whether as text or a sequence of dictionaries) only 3027 routes are found.
 Also, at the initial information is possible to get the first hint to clean the dataset due to the present of some routes duplicated due to the analysis of 2 or more annotators. For this labour the first step was to analyse duplicated labelled journeys, finding out a not depreciable part of those (more than the 50% of the sample) are labelled at least once with “I don’t know”. Trying to have a more specific and bigger sample only the journey labelled with a different ticket than “I don’t know”, of those duplicated, will be saved. Also, those journeys that differs and are analyse for more than 2 annotators are ordered to keep only the most frequent label. Finally, all those journeys labelled as “I don’t know” are dropped trying to avoid the “garbage in, garbage out” principle.
 To archive the purpose business case in the minimum time possible as is asked, we start researching similar projects. This research is started using the main free use LLM (Gemini & Bing Copilot). The option chosen is the Gemini one which recommend using multiple to measure the distance between routes and use those distances to classify. The LLM model purpose is use the following distances:

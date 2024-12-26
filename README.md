@@ -18,23 +18,12 @@ Based on those 3 questions is possible to design the metrics used for the A|B te
 The second question will be answered with the number of active users. This metric depends of the definition of active users because the user interaction with the app could variate a lot depending of the business specifications .  
 Finally, the last question would be answer by the number of users who uninstall the app in a sort time. 
 Using two metrics is possible to have 4 different results: 
-
-| Result      | Conclusion |
+| **Result**      | **Conclusion** |
 | :---        |       ---: |
-| - Both metrics are better  | The social logging is better  |
-| - Better in early logging  | Is the cost of social logging |                             
-| - Worse in consistency     | implementation paid by the information of the users logged? |
-| - Worse in early logging   |                              |
-| - Better in consistency    | The social logging is better |
-
-- Both metrics are better:
-  The social logging is better
-- Better in early logging but worse in consistency:
-  Is the cost of social logging implementation paid by the information of the users logged?
-- Worse in early logging but worse in consistency:
-   Is the information and potential clients lost paid by the quality of the current users
-- Both metrics are worse or the uninstall metric is greater:
-   Social logging is worse
+| **Both** metrics are **better**  | The social logging is better |
+| **Better** in early logging but **Worse** in consistency     | Is the cost of social logging implementation paid by the information of the users logged? |
+| **Worse** in early logging but **Better** in consistency    | Is the information and potential clients lost paid by the quality of the current users |
+| **Both** metrics are **worse** or the **uninstall** metric is **greater** |  Social logging is worse |
 
 The main problem of an A|B test is always the cost of the experiment. The treatment and control group are clients with a potential benefit for the company which could be lost because of the experiment. 
 

@@ -4,19 +4,28 @@ The social logging is a powerful tool to ease the installation process whether y
 
 To test the asset of this tool is possible to use multiple methodologies. This study will be focused on those based on machine learning and data solutions.
 
-By the data solutions hand the best one could be a classic A|B test,  even if is possible to build another solution based on reinforce learning for example. In the A|B test, the control group are those who use the traditional logging and treatment group will be the social loggings users. 
+On the data solutions size the best one could be a classic A|B test,  even if is possible to build another solution based on reinforce learning for example. In the A|B test, the control group are those who use the traditional logging and treatment group will be the social loggings users. 
 
-In an A|B test the most important part of the design is always the metrics selection. The present case could present two questions to select the best metric: 
+In an A|B test the most important part of the design is always the metrics selection. The present case could present 3 questions to select the best metric: 
 
 -	Do users register or log more when using social logging? 
--	Are the social logging users consistent or they only logging and left the app?  
+-	Are the social logging users consistent or they only logging and left the app? (Do they turn into active users?)
 -	Do the users uninstall the app more with social logging?
+  
 Based on those 3 questions is possible to design the metrics used for the A|B test. 
  The first one answer to the first question measuring the number of loggings.  Also, will check the dropout rate which is the inverse of the registered users. 
  
 The second question will be answered with the number of active users. This metric depends of the definition of active users because the user interaction with the app could variate a lot depending of the business specifications .  
 Finally, the last question would be answer by the number of users who uninstall the app in a sort time. 
 Using two metrics is possible to have 4 different results: 
+
+| Result      | Conclusion |
+| :---        |       ---: |
+| - Both metrics are better  | The social logging is better  |
+| - Better in early logging  | Is the cost of social logging |                             
+| - Worse in consistency     | implementation paid by the information of the users logged? |
+| - Worse in early logging   |                              |
+| - Better in consistency    | The social logging is better |
 
 - Both metrics are better:
   The social logging is better

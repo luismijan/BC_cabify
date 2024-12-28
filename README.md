@@ -1,50 +1,104 @@
 # PART 1: Experiment Design
-
-The social logging is a powerful tool to ease the installation process whether you are a new user or registered user who has reinstalled the app.  
+The social logging is a powerful tool to ease the installation process whether you are a new user or registered user who has reinstalled the app.
 
 To test the asset of this tool is possible to use multiple methodologies. This study will be focused on those based on machine learning and data solutions.
 
-On the data solutions size the best one could be a classic A|B test,  even if is possible to build another solution based on reinforce learning for example. In the A|B test, the control group are those who use the traditional logging and treatment group will be the social loggings users. 
+## 1.- Metodology
 
-In an A|B test the most important part of the design is always the metrics selection. The present case could present 3 questions to select the best metric: 
+On the data solutions size the best one could be a classic A|B test, even if is possible to build another solution based on reinforce learning just like the company did for other projects as pricing. 
+In the A|B test, the control group are those which use the traditional logging and treatment group will be the social loggings users.
 
--	Do users register or log more when using social logging? 
--	Are the social logging users consistent or they only logging and left the app? (Do they turn into active users?)
--	Do the users uninstall the app more with social logging?
-  
+In an A|B test the most important part is always the metrics selection. The present business case could present 3 questions to choose the best metrics:
+
+- Do users register or log more when using social logging?
+- Are the social logging users consistent or they only logging and left the app? (Do they turn into active users?)
+- Do the users uninstall the app more with social logging?
+
 Based on those 3 questions is possible to design the metrics used for the A|B test. 
- The first one answer to the first question measuring the number of loggings.  Also, will check the dropout rate which is the inverse of the registered users. 
- 
-The second question will be answered with the number of active users. This metric depends of the definition of active users because the user interaction with the app could variate a lot depending of the business specifications .  
-Finally, the last question would be answer by the number of users who uninstall the app in a sort time. 
-Using two metrics is possible to have 4 different results: 
+
+The first metrics answer to the first question, measuring the number of loggings. Also, will check the dropout rate which is the inverse of the registered users taking the total app installations as rate base.
+
+The second question will be answered with the number of active users. This metric depends of the definition of active users because the user interaction with the app could variate a lot depending of the business specifications. For example, is an active user from the moment the user search a journey? or are they active only when the do the journey?
+
+Finally, the last question would be answer by the number of users who uninstall the app in a sort time. The period needed to consider a sort time may be choosen following the business specifications. 
+
+Using two metrics is possible to have 4 different results:
+
 | **Result**      | **Conclusion** |
 | :---        |       ---: |
 | **Both** metrics are **better**  | The social logging is better |
-| **Better** in early logging but **Worse** in consistency     | Is the cost of social logging implementation paid by the information of the users logged? |
-| **Worse** in early logging but **Better** in consistency    | Is the information and potential clients lost paid by the quality of the current users |
+| **Better** in logging but **Worse** in consistency     | Is the cost of social logging implementation paid by the information of the users logged? |
+| **Worse** in logging but **Better** in consistency    | Is the information and potential clients lost paid by the quality of the current users? |
 | **Both** metrics are **worse** or the **uninstall** metric is **greater** |  Social logging is worse |
 
-The main problem of an A|B test is always the cost of the experiment. The treatment and control group are clients with a potential benefit for the company which could be lost because of the experiment. 
+Once all the metrics are defined is import to consider the time evolution. For this porpoise is possible to treat the metrics not only as a complete par but, also as deltas. To define the deltas also is important to define the success and fail registration journey based on the define metrics:
 
-Also, we must consider that the metrics are not perfect. Any metric will not cover all the possible situations and all the information. The possibility of have an increase on the loggings because of the social logging but not only in the first minutes after the app installation will be lost on this experiment.
-
-To implement the experiment will be necessary to know the information available about any user when is downloading the app. With the information available is possible to segment the client to choose better the percentage of control group, for example, young users need a lower percentage of control. Also, is important to have a representative users portfolio sample because the transition between control and treatment group is based in sampling. It means the security of the method will be better when the sample is increased but it won’t ever be perfect. Once the segmentation and proportions of any group are chosen any new user will be randomized put into treatment or control group only paying attention to the proportion to be representative at every segment.
-
-Once all the data is available is mandatory to consider the time evolution. For this porpoise is possible to treat the metrics not only as a complete par but, also as deltas. To define the deltas also is important to define the success and fail registration journey based on the define metrics:
-
-•	Success: 
+- Success: 
 1.	Download
 2.	Registration completed.
 3.	The user turns into an active user.
    
-•	Failed: In the failed journey the funnel has not such a simplicity.
+- Failed: In the failed journey the funnel has not such a simplicity.
 1.	Download.
 2.	Registration when is not completed paying attention if that implicate an app uninstall.
-3.	The user does not turn into an active user paying attention if that implicate an app uninstall.
-   
-So is important to analyse the time that users’ need to complete the journey successfully. For example, the first day a 75% of the users complete the journey, the 25% rest of the journey are lost in this part of the funnel. Then the analysis will be repeated in the following 5, 7, etc days until have a enough consistent analysis to know the evolution of the users portfolio.
+3.	In case the users are registred, the user does not turn into an active user paying attention if that implicate an app uninstall.
+
+So is important to analyse the time that user's need to complete the journey successfully. For example, the first day a 75% of the users complete the journey, the 25% rest of the journey are lost in this part of the funnel. Then the analysis will be repeated in the following 5, 7, etc days until have a enough consistent analysis to know the evolution of the users portfolio and how the portfolio evolves. Also is important to know the part of the funnel where the failed users are lost to get better the company process.
+
 Finally, a simple statistic test like a t-stundent test will confirm or not the statistically differences between groups paying attention to the time and the absolute metrics.
+
+## 2.- Implementation
+
+Once the data is available and the experiment designed is mandatory to select the best way to implement it. For this porpouse will be necessary to know the information available about any user when is downloading the app. With the available information is possible to segment the client to choose better the sample always having a right representation of any segment of the users portfolio. 
+
+Another important part of the experiment design is deciding its duration and when to start it. For both questions is important to define when the loggings and registrations are normalized. The best way to find this period out is combine the previous analysis of the registration and loggings on previous years, and get supported by the business knowledge. For example, for previous analysis the business experts knows the summer is not the period to starts any experiment.
+
+Maybe the most important part of any experiment based in statistics for this porpuose is possible to use the following formula [1] trying to find the perfect sample which reduce the type I and II errors:
+
+
+$$
+n = \frac{Z^2pqN}{e^2(N-1) + Z^2pq}
+$$
+
+Where:
+> \( n \) = Sample Size
+
+> \( Z \) = Z value for the confidence level.
+
+> \( p \) = Expected proportion
+
+> \( q \) = 1 - p (0.5)
+
+> \( N \) = Population size
+
+> \( e \) = Margin of error.
+
+Once the segmentation and proportions of any group are chosen any new user will be randomized put into treatment or control group only paying attention to the proportion to be representative at every segment.
+
+## 3.- Benefits and Weakness
+
+Now the experiment is designed but is the experiment perfect?. Any experiment has weakness and the present experiment must suprass its weakness to be selected.
+
+- Benefits:
+
+> Is a cientific way to measure the benefits of social logging
+
+> Is cheaper than other cientifics measurements
+
+> It is an easily replicable experiment in this case.
+
+- Weakness:
+
+> The experiment is based in statisticall analysis so the confidence of the experiment will never be perfect.
+
+> To implent the experiment is mandatory to deploy the social logging so, it takes some costs
+
+> If there is a group which is clearly worse all the users included in this group, who have a potetial benefit for the company, could be lost.
+
+
+## 4.- Bibliography
+
+Sample size [1]: https://onlinetoolkit.co/es/calculadora-tamano-muestra/
 
 # PART 2: Model Prototyping
 

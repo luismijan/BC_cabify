@@ -5,17 +5,7 @@ import pyarrow.compute as pc
 
 import json
 
-import torch
-from torcheval.metrics import FrechetInceptionDistance, PeakSignalNoiseRatio
-from fastdtw import fastdtw
-from scipy.spatial.distance import euclidean
-
 import streamlit as st
-
-from sklearn.metrics import precision_recall_curve, accuracy_score, roc_auc_score, precision_score, recall_score, f1_score
-from xgboost import XGBClassifier
-from catboost import CatBoostClassifier
-import optuna
 
 with open('./data/challenge_dataset.json', 'rb') as f:
     data = f.read()
@@ -56,50 +46,49 @@ df = pa.Table.from_arrays([journey_id,annotator,annotation,estimated_route,real_
                             names = ['journey_id','annotator','annotation','estimated_route','real_route']
                             )
 
-df_pandas = df.to_pandas()
-# Convertir las listas anidadas en tuplas para que pandas pueda agruparlas
-df_pandas['estimated_route'] = df_pandas['estimated_route'].apply(lambda x: tuple(map(tuple, x)))
-df_pandas['real_route'] = df_pandas['real_route'].apply(lambda x: tuple(map(tuple, x)))
+st.write(df.shape)
+duplicados = pa.TableGroupBy(df, 'journey_id').aggregate([('annotation', 'count')]).to_pandas()
+duplicados = pa.array(duplicados[duplicados['annotation_count'] > 1]['journey_id'].unique())
 
-# Agrupar por 'estimated_route' y 'real_route' y contar las anotaciones únicas
-result = df_pandas.groupby(['estimated_route', 'real_route'], as_index=False)['annotation'].nunique()
-dupli_esti = result.query('annotation > 1')['estimated_route']
-dupli_real = result.query('annotation > 1')['real_route']
+filtro = pc.is_in(df.column('journey_id'), duplicados)
+aux = df.filter(filtro)
 
-df_duplicated = df_pandas[(df_pandas['estimated_route'].isin(dupli_esti)) & (df_pandas['real_route'].isin(dupli_real))]
-df_duplicated = df_duplicated.groupby('journey_id', as_index = False)['annotation'].unique()
-df_duplicated['first'] = df_duplicated['annotation'].apply(lambda x: x[0])
-df_duplicated['second'] = df_duplicated['annotation'].apply(lambda x: x[1])
-
-st.write('check the distribution')
-
-st.write(df_duplicated[['first', 'second']].value_counts(normalize = False))
-
-id_wrong = df_duplicated[(df_duplicated['first'].isin(['They differ','Both are the same'])) & (df_duplicated['second'].isin(['They differ','Both are the same']))]['journey_id']
-id_easy = df_duplicated[(df_duplicated['first'] == "I don't know") | (df_duplicated['second'] == "I don't know")]['journey_id']
-
-
-df_duplicated2 = df_pandas[df_pandas['journey_id'].isin(id_wrong)][['journey_id', 'annotation', 'annotator']]
-
-
-st.write('Almost all the duplicated annotations are noted by an annotator with a clare bias')
-st.write(df_duplicated2.groupby(['annotator'], as_index= False)['annotation'].value_counts(normalize = False))
-st.write('In consecuence the routes classified by those annotators will be taken appart. The valid result for this routes will be the other one')
-
-st.write('The only annotator without a obvious bias is the 2º')
-st.write(df_pandas[df_pandas['annotator'] == 2]['annotation'].value_counts())
-aux = df_pandas[df_pandas['annotator'] == 2]['journey_id']
-
-df_duplicated = df_pandas[(df_pandas['journey_id'].isin(aux)) & (df_pandas['journey_id'].isin(id_wrong))].groupby(['journey_id', 'annotator'], as_index = False)['annotation'].unique()
-st.write(df_duplicated)
-st.write('''Paying attention to this case the possibility of have a travel noted more than twice appears
-         It means is possible to take the most probable or the most repeated option in the multiclassification cases when the options are other but "I don't know"
-         ''')
-
-aux = df_pandas[df_pandas['journey_id'].isin(id_wrong)].groupby(['journey_id'], as_index = False)['annotation'].value_counts(normalize = False).query('count > 1').sort_values(['journey_id', 'count'], ascending = False).drop_duplicates(subset = ['journey_id', 'count'], keep = 'first')
+st.write(aux.shape)
+aux = aux.to_pandas().groupby('journey_id', as_index = False)['annotation'].unique()
 st.write(aux)
-df_pandas = df_pandas[~((df_pandas['journey_id'].isin(id_easy)) & (df_pandas['annotation'] == "I don't know"))]
-df_pandas = df_pandas[~((df_pandas['journey_id'].isin(id_wrong))) & ~(pd.Series(df_pandas['annotation'] + df_pandas['journey_id']).isin(aux['annotation'] + aux['journey_id']))]
-st.write(df_pandas['annotation'].value_counts(normalize = True))
-st.write(df_pandas.shape)
-st.write(df_pandas[df_pandas['annotation'] != "I don't know"]['annotation'].value_counts(normalize = True))
+st.write('In several cases the duplicated journeys ends up with the same tag')
+def get_unique_duplicates(x):
+    try:
+        x = x[1]
+        x = None
+    except:
+        x = x[0]
+    return x
+
+no_unicos = aux[aux['annotation'].apply(lambda x: get_unique_duplicates(x)).isna()]
+unicos = aux[~aux['annotation'].apply(lambda x: get_unique_duplicates(x)).isna()]
+
+st.write(no_unicos['annotation'].astype(str).value_counts())
+st.write(no_unicos['annotation'].astype(str).value_counts(normalize = True))
+st.write('''In the 37% of the cases the tag are contradictory. So is possible to drop those cases when the tag is "I don't know" and analyze those which the tag is still duplicated and not unique''')
+
+no_unicos = no_unicos[~no_unicos['annotation'].astype(str).str.contains('''I don't know''')]
+st.write(no_unicos['annotation'].astype(str).value_counts())
+st.write('Now is possible to find a solution for those cases out or simply drop the cases to ensure the consistency of the data')
+
+trial = no_unicos.reset_index(drop = True)
+trial['annotation'] = trial['annotation'].astype(str)
+st.write(trial['annotation'].value_counts(normalize = True))
+
+st.write('There are too many external variables which makes impossible to know how to keep those duplicates. Due to the unkwonledge about the quality of the annotations if more secure to drop those cases.')
+
+aux = df.filter(filtro).to_pandas()
+unicos = aux[aux['journey_id'].isin(unicos['journey_id'].unique())].drop_duplicates(subset = 'journey_id')
+buenos = df.filter(pc.invert(filtro)).to_pandas()
+df_final = pd.concat([buenos, unicos], axis = 0).reset_index(drop = True)
+st.write(df_final['annotation'].value_counts(normalize=True))
+
+st.write('To ensure there is no problem whit the known journeys is better to drop those cases')
+df_final = df_final[df_final['annotation'] != "I don't know"]
+st.write(df_final['annotation'].value_counts(normalize=True))
+st.write('Finally the result is pretty balance')

@@ -48,7 +48,7 @@ class generate_var:
             # Building dp[m+1][n+1] in bottom-up fashion
             for i in range(1, m + 1):
                 for j in range(1, n + 1):
-                    if row[self.estimate][i - 1] == row[self.real][j - 1]:
+                    if (row[self.estimate][i - 1] == row[self.real][j - 1]).all():
                         dp[i][j] = dp[i - 1][j - 1] + 1
                     else:
                         dp[i][j] = max(dp[i - 1][j],
@@ -67,10 +67,11 @@ class generate_var:
         
         # Code adaapted from Geek4Geek website
         # https://www.geeksforgeeks.org/introduction-to-levenshtein-distance/
+        
         # Get the lengths of the input strings
         leven = []
         for idx, row in tqdm(self.df[[self.estimate, self.real]].iterrows()):
-            
+
             m = len(row[self.estimate])
             n = len(row[self.real])
 
@@ -84,7 +85,7 @@ class generate_var:
                 curr_row[0] = i
 
                 for j in range(1, n + 1):
-                    if row[self.estimate][i - 1] == row[self.real][j - 1]:
+                    if (row[self.estimate][i - 1] == row[self.real][j - 1]).all():
                         # Characters match, no operation needed
                         curr_row[j] = prev_row[j - 1]
                     else:
@@ -103,16 +104,20 @@ class generate_var:
             
         return leven
     
+    
 
     def var_hausdorff(self):
-        
+            
         # Code adaapted from Geek4Geek website
         # https://docs.scipy.org/doc/scipy/reference/generated/scipy.spatial.distance.directed_hausdorff.html
         haus = []
         for idx, row in tqdm(self.df[[self.estimate, self.real]].iterrows()):
-            dist = directed_hausdorff(row[self.estimate], row[self.real])[0]
+            estimate = np.vstack(np.array(row[self.estimate]))
+            real = np.vstack(np.array(row[self.real]))
+            dist = directed_hausdorff(estimate, real)[0]
             haus.append(dist)
         return haus
+    
     def get_pandas_dataframe(self):
         
         print('hausdorff')

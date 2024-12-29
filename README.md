@@ -165,7 +165,7 @@ To build the model the dataset is splited into train (80% of the sample) and tes
 
 At the be first comparation is in the **False Negative Rate** and **False Positive Rate** curve. This curve shows that there is not a single point where the proving the quality of the model at having a quickly but progressive drop in the false positive rate and the opposite in the false negative. Also, the curve shows the perfect cut point at 0.6.
 
-![image.png](attachment:image.png)
+![image](https://github.com/user-attachments/assets/5a26e4ad-3a7f-4aee-9fed-46b8f469629e)
 
 Looking at the metrics the recall is always a little better than precission but in both cases is always metrics good enought. The only point to pay attention is the lightly increase of the precision in the "Both are the same" so would be recomendable to analyze it with more evaluation data before past it to production.
 
@@ -204,11 +204,11 @@ Finally looking at the shap [6] values is possible to see the clear behaviour of
 
 ### Train
 
-![image-2.png](attachment:image-2.png)
+![image](https://github.com/user-attachments/assets/3415a431-7819-4d52-9a63-416ca2ff0ca6)
 
 ### Test
 
-![image-3.png](attachment:image-3.png)
+![image](https://github.com/user-attachments/assets/2d25bb9c-13b8-4ca6-83d2-1e03cbfbd81c)
 
 ## 5.- Bibliography
 

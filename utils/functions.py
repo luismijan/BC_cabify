@@ -42,3 +42,11 @@ def model_parameters(real, predicted):
     sns.heatmap(cf_matrix, annot=True, cmap='Blues', fmt='g', ax = ax)
     plt.title("Confusion matrix model ")
     return fig
+
+def get_unique_duplicates(x):
+        try:
+            x = x[1]
+            x = None
+        except:
+            x = x[0]
+        return x

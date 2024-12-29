@@ -165,29 +165,29 @@ To build the model the dataset is splited into train (80% of the sample) and tes
 
 At the be first comparation is in the **False Negative Rate** and **False Positive Rate** curve. This curve shows that there is not a single point where the proving the quality of the model at having a quickly but progressive drop in the false positive rate and the opposite in the false negative. Also, the curve shows the perfect cut point at 0.6.
 
-![image](https://github.com/user-attachments/assets/5a26e4ad-3a7f-4aee-9fed-46b8f469629e)
+![image](https://github.com/user-attachments/assets/ef88526d-e6d6-4d53-9620-436482c3e3a6)
 
-Looking at the metrics the recall is always a little better than precission but in both cases is always metrics good enought. The only point to pay attention is the lightly increase of the precision in the "Both are the same" so would be recomendable to analyze it with more evaluation data before past it to production.
+Looking at the metrics the recall is always a little better than precission but in both cases is always metrics good enought. The only point to pay attention is the lightly increase of the recall in the "Both are the same" so would be recomendable to analyze it with more evaluation data before past it to production.
 
 ### Train
 | | Precision | Recall | F1 |
 | :--- | :---: | :---: | ---: |
-| Both are the same | 0.8867 | 0.9125 | 0.8994 |
-| They differ | 0.9339 | 0.9138 | 0.9237 |
+| Both are the same | 0.9255 | 0.9057 | 0.9155 |
+| They differ | 0.9290 | 0.9442 | 00.9365 |
 | | | | |
-| Accuracy | | | 0.9133	|
-| Macro Avg | 0.9103 | 0.9132 | 0.9116 |
-| Weighted Avg | 0.9138 | 0.9133 | 0.9134 |
+| Accuracy | | | 0.9275	|
+| Macro Avg | 0.9273 |0.9250 | 0.9260 |
+| Weighted Avg | 0.9275 | 0.9275 | 0.9274 |
 
 ### Test
 | | Precision | Recall | F1 |
 | :--- | :---: | :---: | ---: |
-| Both are the same | 0.8875 | 0.9025 | 0.8950 |
-| They differ | 0.9228 | 0.9106 | 0.9167 |
+| Both are the same | 0.9058 | 0.9099 | 0.9079 |
+| They differ | 0.9365 | 0.9335 | 0.9350 |
 | | | | |
-| Accuracy | | | 0.9071 |
-| Macro Avg | 0.9052 | 0.9066 | 0.9058 |
-| Weighted Avg | 0.9073 | 0.9071 | 0.9071 |
+| Accuracy | | | 0.9238 |
+| Macro Avg | 0.9212 | 0.9217	| 0.9214 |
+| Weighted Avg | 0.9238 | 0.9238 | 0.9238 |
 
 Finally looking at the shap [6] values is possible to see the clear behaviour of the variables:
 - DTW: 
@@ -204,11 +204,11 @@ Finally looking at the shap [6] values is possible to see the clear behaviour of
 
 ### Train
 
-![image](https://github.com/user-attachments/assets/3415a431-7819-4d52-9a63-416ca2ff0ca6)
+![image](https://github.com/user-attachments/assets/60c31d7b-a1bc-4cf0-973a-8f9bd24912fa)
 
 ### Test
 
-![image](https://github.com/user-attachments/assets/2d25bb9c-13b8-4ca6-83d2-1e03cbfbd81c)
+![image](https://github.com/user-attachments/assets/1f361c21-6365-4e73-8bb9-931087c8436e)
 
 ## 5.- Bibliography
 

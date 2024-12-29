@@ -100,48 +100,126 @@ Now the experiment is designed but is the experiment perfect?. Any experiment ha
 
 Sample size [1]: https://onlinetoolkit.co/es/calculadora-tamano-muestra/
 
-# PART 2: Model Prototyping
 
-The first step to start a model is always to analyse and clean the dataset. At the beginning the lack of journeys comparing to those which are noted in the enounced of the problem. No matter the way the json file is read (whether as text or a sequence of dictionaries) only 3027 routes are found.
+# **PART 2**: Model Prototyping
 
-Also, at the initial information is possible to get the first hint to clean the dataset due to the present of some routes duplicated due to the analysis of 2 or more annotators. For this labour the first step was to analyse duplicated labelled journeys, finding out a not depreciable part of those (more than the 50% of the sample) are labelled at least once with “I don’t know”. Trying to have a more specific and bigger sample only the journey labelled with a different ticket than “I don’t know”, of those duplicated, will be saved. Also, those journeys that differs and are analyse for more than 2 annotators are ordered to keep only the most frequent label. Finally, all those journeys labelled as “I don’t know” are dropped trying to avoid the “garbage in, garbage out” principle.
+Cabify is drivers are guide by a router algorithm which allows to find the most eficient way to go from point A to B. Even so, sometimes drivers take a different route from the suggested by the algorithm. 
 
-To archive the purpose business case in the minimum time possible as is asked, we start researching similar projects. This research is started using the main free use LLM (Gemini & Bing Copilot). The option chosen is the Gemini one which recommend using multiple to measure the distance between routes and use those distances to classify. The LLM model purpose is use the following distances:
+If cabify drivers would do only a few rides different from the planed route per day would be easy to find those which are similars by hand, but they are much more than is possible to analyze by humans. 
 
->	**Fréchet inception distance (FID)**: This metric is used to measure the difference between real & predicted distribution by compare the mean and covariance in distributions. This metric brings a good information for the proposed model but is only accurate for same shaped embeddings. A possible solution to calculate the FID is suppose that once the sorted route is over the car will keep always in the same place. This solution will solve the technical problem, but it could confuse the model in case when the movement is pretty sort. For this reason, other metrics are tried.
+In this context the needs for a algorithm which recognise the similarity and differences in routes to tag they as "Both are the same" and "They differ".
 
->	**Dynamic Time Warping (DTW)**: This technique is used to find an optimal alignment between two sequences. the quality of the route even if is not only measure for the time cost is one on the main KPIs used. For this reason, this technique is one of the best options for the present problem due to the time dependency suppose. 
+## 2.- State of the art 
 
->	**Hausdorff Distance**: This distance tries to measure the maximum distance between both embeddings in the metric space.
+To archive the goal of have the project in the marked time the reseach starts with 2 of the most importants large lenguage models (LLM) at the moment (GPT-4 by Microsoft Bing Copilot & Gemini by Google). After analyze the porpoused options the most reliable appears to be the Gemini one which recommend using multiple embedings distances to measure the distance between routes and use those distances to classify. The LLM model purpose is use the following distances:
 
-Due to the problem presented by the FID appears the need of new metrics
+> **Fréchet inception distance (FID)**: This metric is used to measure the difference between real & predicted distribution by compare the mean and covariance in distributions. This metric brings a good information for the proposed model but is only accurate for same shaped embeddings. A possible solution to calculate the FID is suppose that once the sorted route is over the car will keep always in the same place. This solution will solve the technical problem, but it could confuse the model in case when the movement is pretty sort. For this reason, other metrics are tried.
+
+> **Dynamic Time Warping (DTW)**: This technique is used to find an optimal alignment between two sequences. the quality of the route even if is not only measure for the time cost is one on the main KPIs used. For this reason, this technique is one of the best options for the present problem due to the time dependency suppose.
+
+> **Hausdorff Distance**: This distance tries to measure the maximum distance between both embeddings in the metric space.
+
+Due to the problem presented by the FID appears the need of new metrics, so a new research starts:
+
 
 - Based on Google [1] recommendations is possible to use the following distnaces:
->	**Euclidean distance**: Measure the distance between ends of vectors.
+> **Euclidean distance**: Measure the distance between ends of vectors.
 
->	**Cosine distance**:  Cosine of angle θ between vectors.
+> **Cosine distance**:  Cosine of angle θ between vectors.
 
->	**Scalar product**: Cosine multiplied by lengths of both vectors.
+> **Scalar product**: Cosine multiplied by lengths of both vectors.
 
 - Based on Geek4Geeks [2] recommendations is possible to use the following distances:
  
->	**Longest Common Subsequence (LCS)**: As its name suggests, the LSC return the length of the longest common subsequence in two strings. This metric is used for strings but is possible to apply in the present business case because it brings information about if the route diverges from the estimate one every time or have part of the path in common.
+> **Longest Common Subsequence (LCS)**: As its name suggests, the LSC return the length of the longest common subsequence in two strings. This metric is used for strings but is possible to apply in the present business case because it brings information about if the route diverges from the estimate one every time or have part of the path in common.
 
->	**Levenshtein distance**: represent the minimum number of operations that could be performed to turn a vector v1 into a different vector v2.
+> **Levenshtein distance**: represent the minimum number of operations that could be performed to turn a vector v1 into a different vector v2.
 
-Taken multiple options finally only 4 are chosen to build models with them (DTW, LCS, Levenshtein & Hausdorff distance).
-Once the features for the model are built and is possible to look for the best model & research its hyperparameters.
-The first option use is an XGBoostClassifier which use to have an efficient performance. For the hyperparameters research the option use is Optuna [3]. To make an interactive model selection a Streamlit [4] app is running with the main parameters to evaluate the model performance and interactive widgets which allows to set some model parameters as the cut point, and the features used build the model.
+Taken multiple options finally only 4 are chosen to try build models with them (DTW, LCS, Levenshtein & Hausdorff distance).
 
-In the first research is possible to see that, indeed, the model is good enough (Figure 1) and is not needed to try another model. Therefore, the model is saved as the version xgboost_model_v8.joblib which only use (DTW and Levenstein features) to be used as many times as its needed.
 
- ![image](https://github.com/user-attachments/assets/fa19e959-4fe6-4e89-87d2-23db2747407c)
-Figure 1
+Once the features for the model would be built and would be possible to look for the best model & research its hyperparameters.
 
->Google [1]: https://developers.google.com/machine-learning/clustering/dnn-clustering/supervised-similarity?hl=es-419
+The first option use is an XGBoostClassifier [3] which used to have an efficient performance. 
+
+For the hyperparameters research the option use is Optuna [4]. 
+
+To make an interactive model selection which allows to select the best features and evaluates its performances, is possible to build an Streamlit [5] app. The app is running with the main parameters to evaluate the model performance and interactive widgets which allows to set some model parameters as the cut point, and the features used build the model.
+
+## 3.- Data cleaning.
+
+The first step to start a model is always to analyse and clean the dataset. 
+
+At the beginning the lack of journeys comparing to those which are noted in the enounced of the problem. No matter the way the json file is read (whether as text or a sequence of dictionaries) only 3027 routes are found.
+
+Also, at the initial information is possible to get the first hint to clean the dataset due to the present of some routes duplicated due to the analysis of 2 or more annotators. For this labour the first step was to analyse duplicated labelled journeys, finding out a not depreciable part of those (more than the 60% of the sample) are labelled at least once with “I don’t know”. Trying to have a more specific and bigger sample only the journey labelled with a different ticket than “I don’t know”, of those duplicated, will be saved. 
+Also, those journeys that differs and are analyse but is impossible to know which annotator were right. Even in the case when there were more annotators tagging in a wey the journey than those who tag in the opposite is impossible to comfirm that the right one are the majority. So, trying to avoid the “garbage in, garbage out” principle all the duplicated and not eassilly confidable journeys are dropped.
+Finally, all those journeys labelled as “I don’t know” are dropped due to the possibility of confuse the algorithm with routes which are different but tagged as "I don't know" and also, journeys tagged on the same way but simillars. 
+
+## 4.- Model results
+
+Once the data is compleatlly clean and transform into the distances said in the state of the art, is possible to start building the model ussing the algorithm also said on this part. 
+To ensure the asset of the model is possible to pay attention to multiples metrics. Some of the most important metrics are acuraccy, the precission, recall and f1 score. The curve of false positives and false negatives is important to know the discrimination power of the model too.
+
+To build the model the dataset is splited into train (80% of the sample) and test (20%) stratifying by the annotation. All the follow metrics and plots are ready to compare the train with the test data. 
+
+At the be first comparation is in the **False Negative Rate** and **False Positive Rate** curve. This curve shows that there is not a single point where the proving the quality of the model at having a quickly but progressive drop in the false positive rate and the opposite in the false negative. Also, the curve shows the perfect cut point at 0.6.
+
+![image.png](attachment:image.png)
+
+Looking at the metrics the recall is always a little better than precission but in both cases is always metrics good enought. The only point to pay attention is the lightly increase of the precision in the "Both are the same" so would be recomendable to analyze it with more evaluation data before past it to production.
+
+### Train
+| | Precision | Recall | F1 |
+| :--- | :---: | :---: | ---: |
+| Both are the same | 0.8867 | 0.9125 | 0.8994 |
+| They differ | 0.9339 | 0.9138 | 0.9237 |
+| | | | |
+| Accuracy | | | 0.9133	|
+| Macro Avg | 0.9103 | 0.9132 | 0.9116 |
+| Weighted Avg | 0.9138 | 0.9133 | 0.9134 |
+
+### Test
+| | Precision | Recall | F1 |
+| :--- | :---: | :---: | ---: |
+| Both are the same | 0.8875 | 0.9025 | 0.8950 |
+| They differ | 0.9228 | 0.9106 | 0.9167 |
+| | | | |
+| Accuracy | | | 0.9071 |
+| Macro Avg | 0.9052 | 0.9066 | 0.9058 |
+| Weighted Avg | 0.9073 | 0.9071 | 0.9071 |
+
+Finally looking at the shap [6] values is possible to see the clear behaviour of the variables:
+- DTW: 
+
+> **Low values**: Is the most clear behaviour and always involves high odds results, what means is more probable than the routes are different.
+
+> **High values**: Are the most repeated and has different results in the model (most probably depending on the Levenshtein value).
+
+- Levenshtein: 
+
+> **Low values**: Involves high odds results, what means is more probable than the routes are different.
+
+> **High values**: Involves lower odds results, what means is more probable than the routes are similars.
+
+### Train
+
+![image-2.png](attachment:image-2.png)
+
+### Test
+
+![image-3.png](attachment:image-3.png)
+
+## 5.- Bibliography
+
+> Google [1]: https://developers.google.com/machine-learning/clustering/dnn-clustering/supervised-similarity?hl=es-419
 
 > Geek4Geeks [2]: https://www.geeksforgeeks.org/
 
-> Optuna [3]: https://github.com/optuna/optuna 
+> XGBoost [3]: https://xgboost.readthedocs.io/en/stable/python/index.html
 
-> Streamlit [4]: https://docs.streamlit.io/ 
+> Optuna [4]: https://github.com/optuna/optuna
+
+> Streamlit [5]: https://docs.streamlit.io/
+
+> Shap [6]: [https://www.geeksforgeeks.org/](https://shap.readthedocs.io/en/latest/index.html)

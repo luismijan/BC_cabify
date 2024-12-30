@@ -222,4 +222,4 @@ Finally looking at the shap [6] values is possible to see the clear behaviour of
 
 > Streamlit [5]: https://docs.streamlit.io/
 
-> Shap [6]: [https://www.geeksforgeeks.org/](https://shap.readthedocs.io/en/latest/index.html)
+> Shap [6]: https://shap.readthedocs.io/en/latest/index.html
